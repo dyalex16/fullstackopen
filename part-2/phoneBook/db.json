@@ -1,0 +1,20 @@
+{
+  "persons": [
+    {
+      "name": "Sara Klein",
+      "number": "90434934",
+      "id": "tiHgL85tKKs"
+    },
+    {
+      "name": "Arto Hellas",
+      "number": "040-231-0675",
+      "id": "weZGYk5kPOo"
+    },
+    {
+      "name": "Mark Deniz",
+      "number": "64-33-111",
+      "id": "U-DllnrYVec"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
