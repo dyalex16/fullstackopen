@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import noteService from './services/notes'
+import personService from './services/persons'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
@@ -14,7 +14,7 @@ const App = () => {
   const [errorType, setErrorType] = useState('success')
 
   useEffect(() => {
-    noteService.getAll()
+    personService.getAll()
     .then(initialNumbers => {
       setPersons(initialNumbers)
     })
@@ -45,7 +45,7 @@ const App = () => {
     
     const found = persons.find(person => person.name === newName)
     if (found === undefined){
-      noteService.add(newPerson)
+      personService.add(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
         setNewName('')
@@ -55,7 +55,7 @@ const App = () => {
     } else if ((found.number !== phoneNumber)){
         if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
           const changedPerson = {...found, number: phoneNumber}
-          noteService.update(found.id, changedPerson)
+          personService.update(found.id, changedPerson)
           .then(returnedPerson => {
             setPersons(persons.map(person => person.id == found.id? 
                 returnedPerson : person ))
@@ -78,10 +78,10 @@ const App = () => {
   const removePerson = (id) => {
     const target = persons.find(person => person.id === id)
     if (window.confirm(`Delete ${target.name}?`)){
-      noteService.remove(id)
+      personService.remove(id)
       .then(deleted => {
-        setPersons(persons.filter(person => person.id !== deleted.id))
-        displayNotification(`${deleted.name} deleted successfully!`, 'success')  
+        setPersons(persons.filter(person => person.id !== id))
+        displayNotification(`${target.name} deleted successfully!`, 'success')  
       })
       .catch(error => {
         console.log(error)
