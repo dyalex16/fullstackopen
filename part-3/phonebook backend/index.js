@@ -35,7 +35,7 @@ app.get('/api/persons', (req, res) => {
 
 app.get('/info', (req, res) => {
     res.send(`<p>Phonebook has info for ${persons.length} people</p> 
-        <br> ${new Date()}`)
+        <p> ${new Date()}</p>`)
 })
 
 app.get('/api/persons/:id', (req, res) => {
@@ -76,8 +76,14 @@ app.post('/api/persons', (req, res) => {
 
 app.delete('/api/persons/:id', (req, res) => {
     const id = req.params.id
+    const person = persons.find(p => p.id === id)
+
+    if (!person){
+        return res.status(404).json({
+            error: `info does not exist on server`
+        })
+    }
     persons = persons.filter(p => p.id !== id)
-    
     res.status(204).end()
 })
 
