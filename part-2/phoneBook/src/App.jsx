@@ -44,7 +44,7 @@ const App = () => {
     const newPerson = { name: newName, number: phoneNumber } 
     
     const found = persons.find(person => person.name === newName)
-    if (found === undefined){
+    if (!found){
       personService.add(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
@@ -64,7 +64,7 @@ const App = () => {
             displayNotification(`${newName}'s number updated successfully!`, 'success')  
           }).catch(error => {
             console.log(error)
-            setPersons(persons.filter(person => person.id != found.id))
+            setPersons([...persons])
             displayNotification(`${newName} info does not exist on the server`, 'error')
           })
         }
