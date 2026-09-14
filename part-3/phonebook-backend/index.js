@@ -7,30 +7,6 @@ const app = express()
 app.use(express.static('dist'))
 app.use(express.json())
 
-
-// let persons = [
-//     {
-//         id: "1",
-//         name: "Arto Hellas",
-//         number: "040-123456"
-//     },
-//     {
-//         id: "2",
-//         name: "Ada Lovelace",
-//         number: "39-44-532323"
-//     },
-//     {
-//         id: "3",
-//         name: "Dan Abramov",
-//         number: "12-43-234533"
-//     },
-//     {
-//         id: "4",
-//         name: "Mary Poppendieck",
-//         number: "39-23-12325445"
-//     }
-// ]
-
 app.get('/api/persons', (req, res) => {
     Person.find({}).then(persons => {
         res.json(persons)
@@ -64,18 +40,40 @@ app.post('/api/persons', (req, res) => {
     })
 })
 
-app.delete('/api/persons/:id', (req, res) => {
-    const id = req.params.id
-    const person = persons.find(p => p.id === id)
+app.put('/api/persons/:id', (req, res, next) => {
+    const { number } = req.body
 
-    if (!person){
-        return res.status(404).json({
-            error: `info does not exist on server`
+    Person.findById(req.params.id)
+    .then(person => {
+        if (!person) {
+            return res.status(404).end()
+        }
+
+        person.number = number
+
+        return person.save().then(updatedPerson => {
+            res.json(updatedPerson)
         })
-    }
-    persons = persons.filter(p => p.id !== id)
-    res.status(204).end()
+    }).catch(error => next(error))  
 })
+
+app.delete('/api/persons/:id', (req, res, next) => {
+    Person.findByIdAndDelete(req.params.id)
+    .then(result => {
+            res.status(204).end()
+    })
+    .catch(error => next(error))
+})
+
+const errorHandler = (error, req, res, next) => {
+    console.log(error.message)
+
+    if (error.name === 'CastError') {
+        return res.status(400).send({ error: 'malformatted id'})
+    }
+
+    next(error)
+}
 
 function generateID() {
     return Math.floor(Math.random() * (21 - 5) + 5)
