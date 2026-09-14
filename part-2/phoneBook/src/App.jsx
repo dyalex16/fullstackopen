@@ -43,6 +43,10 @@ const App = () => {
     event.preventDefault()
     const newPerson = { name: newName, number: phoneNumber } 
     
+    if ((!phoneNumber || !newName) || (!phoneNumber && !newName)){
+      displayNotification('Please add name and phone number', 'error')
+    }
+    
     const found = persons.find(person => person.name === newName)
     if (!found){
       personService.add(newPerson)
