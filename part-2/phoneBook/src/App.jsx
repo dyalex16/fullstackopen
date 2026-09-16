@@ -36,17 +36,12 @@ const App = () => {
     setErrorType(type)
     setTimeout(() => {
       setErrorMessage(null)
-    }, 3000)  
+    }, 5000)  
   }
 
   const addPerson = (event) => {
     event.preventDefault()
     const newPerson = { name: newName, number: phoneNumber } 
-    
-    if ((!phoneNumber || !newName) || (!phoneNumber && !newName)){
-      displayNotification('Please add name and phone number', 'error')
-    }
-    
     const found = persons.find(person => person.name === newName)
     if (!found){
       personService.add(newPerson)
@@ -55,6 +50,10 @@ const App = () => {
         setNewName('')
         setPhoneNumber('')
         displayNotification(`${newName} added successfully!`, 'success')
+      })
+      .catch(error => {
+        console.log(error.response.data)
+        displayNotification(`${error.response.data.error}`, 'error')
       })
     } else if ((found.number !== phoneNumber)){
         if(window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
@@ -67,9 +66,9 @@ const App = () => {
             setPhoneNumber('')
             displayNotification(`${newName}'s number updated successfully!`, 'success')  
           }).catch(error => {
-            console.log(error)
+            console.log(error.response.data)
             setPersons([...persons])
-            displayNotification(`${newName} info does not exist on the server`, 'error')
+            displayNotification(`${error.response.data.error}`, 'error')
           })
         }
     } 

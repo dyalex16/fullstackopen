@@ -6,9 +6,9 @@ if (process.argv.length < 3) {
 }
 
 const password = process.argv[2]
-const url = `mongodb+srv://dyalex:WrtQYPqYpCPvGU2q@cluster0.9dlzwlq.mongodb.net/phonebook?appName=Cluster0`
+const url = 'mongodb+srv://dyalex:fmJMoJKxDw2WJVU2@cluster0.9dlzwlq.mongodb.net/phonebook?appName=Cluster0'
 
-if (password !== 'WrtQYPqYpCPvGU2q'){
+if (password !== 'fmJMoJKxDw2WJVU2'){
   console.log('incorrect password')
   process.exit(1)
 }
@@ -28,18 +28,18 @@ const person = new Person({
   number: process.argv[4],
 })
 
-if (process.argv.length == 3 && password === 'WrtQYPqYpCPvGU2q') {
+if (process.argv.length === 3 && password === 'fmJMoJKxDw2WJVU2') {
   Person.find({}).then(result => {
     console.log('phonebook:')
     result.forEach(person => {
       console.log(person.name, person.number)
     })
     mongoose.connection.close()
-  })  
+  })
 }
 
 person.save().then(result => {
-  console.log(`added ${person.name} number ${person.number} to phonebook.`)
+  console.log(`added ${result.name} number ${result.number} to phonebook.`)
   mongoose.connection.close()
 })
 
